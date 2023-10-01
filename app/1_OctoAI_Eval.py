@@ -1,8 +1,5 @@
 import streamlit as st
 from octoai.client import Client
-import subprocess
-from dotenv import load_dotenv
-import os
 from pathlib import Path
 from pydantic import BaseModel
 from typing import List, Dict
