@@ -1,6 +1,6 @@
 # OctoAI Imagen & SDXL Evaluation | Typeface
 
-This repo contains the minimum set of instructions for Typeface to get started using OctoAI's Image Generation and SDXL capabilities. As we continue to onboard you to additional features and functionality, we will update this documentation to support your onboarding to OctoAI. 
+This repo contains the minimum set of instructions for Typeface to get started using OctoAI's Image Generation and SDXL capabilities. As we continue to roll out new features and functionality, we will update this documentation to support your onboarding on to OctoAI.
 
 We strongly recommend you read our [docs](https://docs.octoai.cloud/docs), which include robust examples and tutorials.
 
