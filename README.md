@@ -237,12 +237,13 @@ This document describes the arguments you can provide to the Image Generation AP
 ### `model`
 - **Type**: `string`
 - **Description**: Checkpoints supported.
-- **Available Values**: `copax-timeless`, `crystal-clear`, ... (include all other models here)
+
+- **Available Values**: `copax-timeless`, `crystal-clear`, `duchaiten-aiart`, `realcartoon`, `samaritan`
 
 ### `loras`
 - **Type**: `string`
 - **Description**: LoRAs supported in name-weight pairs.
-- **Available Values**: `add-detail`, `crayon-style`, ... (include all other LoRAs here)
+- **Available Values**: `add-detail`, `crayon-style`, (more coming soon...)
 
 ### `init_image` (Optional)
 - **Type**: `string`
