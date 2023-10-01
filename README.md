@@ -14,7 +14,16 @@ Set your environment variables and run the cURL command below to generate an ima
 
 Clone this repo:
 ```bash
-git clone <this repo>
+git clone https://github.com/octoml/typeface-external.git
+
+cd typeface-external
+
+# Create a new conda enviroment - RECOMMENDED
+conda create --name octoai --file conda-packages.txt
+
+# Alternatively, install as a requirements.txt
+pip install -r requirements.txt
+
 ```
 Set up OctoAI environment variables:
 ```bash
@@ -111,7 +120,6 @@ To make exploring the OctoAI service easier, launch the Streamlit app included i
 __NOTE__: This will also install the Octo CLI and SDK. During the initial phase of the eval, you will use these tools minimally. To learn more (highly recommended), please go to our docs.
 
 ```bash
-pip install -r requirements.txt
 streamlit run app/1_OctoAI_Eval.py
 ```
 
