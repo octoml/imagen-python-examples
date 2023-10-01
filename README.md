@@ -25,10 +25,10 @@ git clone https://github.com/octoml/typeface-external.git
 
 cd typeface-external
 
-# Create a new conda enviroment - RECOMMENDED
-conda create --name octoai --file conda-packages.txt
+# RECOMMENDED" Create a new conda enviroment - 
+# conda create --name octoai
 
-# Alternatively, install as a requirements.txt
+# install requirements
 pip install -r requirements.txt
 
 ```
