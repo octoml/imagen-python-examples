@@ -1,6 +1,6 @@
 # OctoAI Imagen & SDXL Evaluation | Typeface
 
-This repo contains the bare minimum set of instructions for Typeface to get started using OctoAI's Image Generation and SDXL capabilities.As we work together, we will update this documentation to support your onboarding to OctoAI. 
+This repo contains the minimum set of instructions for Typeface to get started using OctoAI's Image Generation and SDXL capabilities. As we continue to onboard you to additional features and functionality, we will update this documentation to support your onboarding to OctoAI. 
 
 We strongly recommend you read our [docs](https://docs.octoai.cloud/docs), which include robust examples and tutorials.
 
@@ -10,10 +10,11 @@ We strongly recommend you read our [docs](https://docs.octoai.cloud/docs), which
 
 ## Quick Start & Basic Usage
 
-Set your environment variables and run the cURL command below to generate an image. (We will share your token separately.)
+Install the project requirements and set your environment variables. Then, run the cURL command below to generate an image. (We will share your token separately.) 
 
 Clone this repo:
 ```bash
+# Installs this repo
 git clone https://github.com/octoml/typeface-external.git
 
 cd typeface-external
@@ -114,10 +115,8 @@ else:
 
 ```
 
-## Advance OctoAI Usage / Going further
+## Advance OctoAI Usage, Customization, and SDK
 To make exploring the OctoAI service easier, launch the Streamlit app included in this reposotiry. 
-
-__NOTE__: This will also install the Octo CLI and SDK. During the initial phase of the eval, you will use these tools minimally. To learn more (highly recommended), please go to our docs.
 
 ```bash
 streamlit run app/1_OctoAI_Eval.py
@@ -125,7 +124,7 @@ streamlit run app/1_OctoAI_Eval.py
 
 This will launch a Streamlit app that will allow you to explore all the functionality of the OctoAI service, including customization features, such as loras, negative prompts, checkpoints, and more.
 
-## OctoAI Image Generation API 
+## OctoAI Image Generation API Specs
 
 We support the following dimensions for SDXL
 
