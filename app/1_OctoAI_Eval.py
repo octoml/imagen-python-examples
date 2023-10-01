@@ -233,10 +233,10 @@ def main():
         st.write(""" To get started, please see the sample scenarios below. As you adjust your SDXL parameters, the request payload will automatically update.
                  Press the _Run Inference_ button to generate an example images from.
         """)
-        st.subheader("1. Endpoint Test")
+        st.subheader("Endpoint Test")
         st.write(""" 
-                To get started, ensure you've set your token and endpoint. You can paste your
-                token in the sidebar and press 'enter.'
+                Set your token and endpoint. You can paste your OctoAI token in the sidebar and press _eEnter_ to set it. This will update the 
+                token in the `conf.yaml` file.
                 
                 Copy and paste the curl command below into your terminal to confirm your OctoAI SDXL
                 endpoint is ready to accept resuts. 
