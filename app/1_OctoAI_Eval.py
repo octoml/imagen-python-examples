@@ -10,7 +10,7 @@ from octoai.types import Image
 st.set_page_config(layout="wide")
 
 BASE_PATH = Path(__file__).parent
-ENV_PATH = BASE_PATH / "conf.yaml"
+ENV_PATH = BASE_PATH / "local_conf.yaml"
 CONF = yaml.safe_load(ENV_PATH.open())
 
 IMAGES_PATH = BASE_PATH / "generated_images"
@@ -66,6 +66,18 @@ config = Config(
 )
 
 # Generic helper funcs
+
+def data_updates(data=config):
+    # Update the data configuration with the latest values
+    payload = data.dict()
+    if payload["model"] == "default":
+        del payload["model"]
+        del payload["loras"]
+        return payload
+    else:
+        return config.dict()
+        
+    
 
 # Run inference with the OctoAI SDK
 def eg_octo_inference(input_payload, endpoint=endpoint, healthcheck=healthcheck):
@@ -141,8 +153,8 @@ def sd_inputs():
         config.negative_prompt = st.text_input("Negative Prompt", config.negative_prompt)
         config.sampler = st.selectbox("Sampler",["DPM++2MKarras", "KLMS", "DDIM", "DDPM", "K_EULER", "K_EULER_ANCESTRAL", "DPMSolverMultistep", "PNDM", "DPMSingle", "HEUN", "DPM_2", "DPM2_ANCESTRAL"])
         config.cfg_scale = st.slider("CFG Scale",step=0.5,value=config.cfg_scale,max_value=30.0)
-        config.height = st.number_input("Height", config.height)
-        config.width = st.number_input("Width", config.width)
+        config.height = st.number_input("Height", value=config.height)
+        config.width = st.number_input("Width", value=config.width)
         
     with col2:
         config.seed = st.number_input("Seed", value=config.seed)
@@ -151,19 +163,24 @@ def sd_inputs():
         config.high_noise_frac = st.slider("High Noise Fraction", value=config.high_noise_frac,step=0.1,max_value=1.0)
         config.strength = st.number_input("Strength", config.strength)
         config.use_refiner = st.checkbox("Use Refiner", config.use_refiner)
-        config.model = st.selectbox("Custom Checkpoints", ["default","copax-timeless", "crystal-clear", "duchaiten-aiart", "realcartoon", "samaritan"])
+        # Make model config dynamic
+        # remove model key if equal 'default'
+        checkpoint_selection = st.selectbox("Custom Checkpoints", ["default","copax-timeless", "crystal-clear", "duchaiten-aiart", "realcartoon", "samaritan"])
+        config.model = checkpoint_selection
+        if checkpoint_selection == "default":
+            del config.model
+
 
 def sd_inputs_loras():
-    config.loras["crayon-style"] = st.slider("Crayon Style", config.loras["crayon-style"],step=0.1)
-    config.loras["paint-splash"] = st.slider("Paint Splash", config.loras["paint-splash"],step=0.1)
-
-
-    #config.loras.crayon_style = st.number_input("Crayon Style", config.loras.crayon_style)
-    #config.loras.paint_splash = st.number_input("Paint Splash", config.loras.paint_splash)
+    crayon_style_input = st.slider("Crayon Style", config.loras["crayon-style"],step=0.1)
+    config.loras["crayon-style"] = crayon_style_input 
+    if crayon_style_input == 0.0:
+        del config.loras["crayon-style"]
         
-    # Display the updated config
-
-# Wrapper func to update data configuration as changes made
+    crayon_style_input = st.slider("Paint Splash", config.loras["paint-splash"],step=0.1)
+    config.loras["paint-splash"] = crayon_style_input 
+    if crayon_style_input == 0.0:
+        del config.loras["paint-splash"]
 
 
 def main():
@@ -211,12 +228,7 @@ def main():
 
         # Run inference
         # Drop model key if equal 'default'
-        payload = config.dict()
-        if payload["model"] == "default":
-            del payload["model"]
-            del payload["loras"]
-        #st.code(payload)
-        img_res = eg_octo_inference(payload)
+        img_res = eg_octo_inference(config.dict())
         
         # Update placeholder with image
         img_placeholder.image(img_res, width=300)
@@ -238,14 +250,10 @@ def main():
                 Copy and paste the curl command below into your terminal to confirm your OctoAI SDXL
                 endpoint is ready to accept resuts. 
                 """)
+
         updated_config_params = json.dumps(config.dict(),indent=4)
 
-        st.code(f"""
-                curl -H 'Content-Type: application/json'\
-                    -H 'Authorization: Bearer {OCTOAI_TOKEN}'\
-                    -X POST 'https://image.octoai.run/predict'\
-                    -d '{updated_config_params}'
-                    """, language="bash")
+        st.code(f"""curl -H 'Content-Type: application/json' -H "Authorization: Bearer $OCTOAI_TOKEN" -X POST "https://image.octoai.run/predict" -d '{updated_config_params}' | jq -r ".completion.image_0" | base64 -d > octoai_test_img.png """, language="bash")
         
         # Section 2 - Try another one
         st.subheader("A custom result")
