@@ -12,27 +12,18 @@ We strongly recommend you read our [docs](https://docs.octoai.cloud/docs), which
 ### Document Overview
 - [Quick Start & Basic Usage](#quick-start--basic-usage)
 - [Explore the Image Generation SDXL API with Streamlit](#explore-the-image-generation-sdxl-api-with-streamlit)
+- [ControlNet SDXL](#controlnet-sdxl)
 - [OctoAI Image Generation API Reference](#octoai-image-generation-api-reference)
 
+
+
 ## Quick Start & Basic Usage
+Run the cURL command below to generate an image. (We will share your token separately.) 
 
-Install the project requirements and set your environment variables. Then, run the cURL command below to generate an image. (We will share your token separately.) 
+For more advanced examples, clone this repo and install the requirements.txt file to launch an application that will allow you to explore all the functionality of the OctoAI service, including customization features, such as loras, negative prompts, checkpoints, and more.
 
-Clone this repo:
-```bash
-# Installs this repo
-git clone https://github.com/octoml/typeface-external.git
-
-cd typeface-external
-
-# RECOMMENDED" Create a new conda enviroment - 
-# conda create --name octoai
-
-# install requirements
-pip install -r requirements.txt
-
-```
 Set up OctoAI environment variables:
+
 ```bash
 export OCTOAI_ACCESS_TOKEN=<sent separately>
 export OCTOAI_ENDPOINT_URL=https://image.octoai.run
@@ -122,7 +113,23 @@ else:
 ```
 
 ## Explore the Image Generation SDXL API with Streamlit
-To make exploring the OctoAI service easier, launch the Streamlit app included in this reposotiry. 
+To make exploring the OctoAI service easier, run the code below to build and launch a Streamlit app to explore the Image Generation SDXL API.
+
+```bash
+Clone this repo:
+```bash
+# Installs this repo
+git clone https://github.com/octoml/typeface-external.git
+
+cd typeface-external
+
+# RECOMMENDED" Create a new conda enviroment - 
+# conda create --name octoai
+
+# install requirements
+pip install -r requirements.txt
+
+```
 
 ```bash
 streamlit run app/1_OctoAI_Eval.py
@@ -130,129 +137,32 @@ streamlit run app/1_OctoAI_Eval.py
 
 This will launch a Streamlit app that will allow you to explore all the functionality of the OctoAI service, including customization features, such as loras, negative prompts, checkpoints, and more.
 
+## ControlNet SDXL
+
+- This endpoint currently supports [ControlNet Canny](https://huggingface.co/diffusers/controlnet-canny-sdxl-1.0), we will be adding depth and softedge to this image shortly.
+- There is an optional NSFW filter implemented using a [safety checker](https://huggingface.co/CompVis/stable-diffusion-safety-checker) and [feature extractor](https://huggingface.co/openai/clip-vit-base-patch32). This is currently turned off for you, as we previously agreed that you will be doing NSFW filtering on your end.
+- There are currently two versions of this endpoint — a cost-optimized one and a latency-optimized one.
+- An auth token is required to access these endpoints
+- We currently have 1 hardware replica up and running for each endpoint, your functional testing. Expect the image URL to change later.
+
+### Model Endpoints 
+```bash
+# Cost Optimized Endpoint
+https://control-sdxl2-vvwbynjr46vc.octoai.run/canny
+
+# Latency Optimized Endpoint
+https://controlnet-sdxl-a100-vvwbynjr46vc.octoai.run/canny
+
+# Run an example using the utility script in example_python
+python example_python/octoai_canny_request.py
+```
+
+| Endpoint           | Scenario                              | avg     | med     | max     | p(90)   | p(95)   |
+|--------------------|---------------------------------------|---------|---------|---------|---------|---------|
+| Cost-Optimized     | Current Latency at 1 virtual user, 30 steps | 11.89s  | 14.23s  | 14.43s  | 14.34s  | 14.39s  |
+| Latency-Optimized  | Current Latency at 1 virtual user, 30 steps | 5.49s   | 5.99s   | 6.4s    | 6.02s   | 6.21s   |
+
 ## OctoAI Image Generation API Reference
-This document describes the arguments you can provide to the Image Generation API. It supports a rich set of configurations for generating images.
 
-### `prompt`
-- **Type**: `string`
-- **Description**: Describes the image to generate.
-- **Constraints**:
-    - Maximum of 77 tokens.
-    - Supports prompt weighting. For example: `(A tall (beautiful:1.5) woman:1.0) (some other prompt with weight:0.8)`.
-    - Weight is the product of all brackets a token is in. The brackets, colons, and weights don't count towards the token count.
-
-### `prompt_2`
-- **Type**: `string`
-- **Description**: 
-    - Default mode (when only `prompt` is set): Input of `prompt` is copied to `prompt_2`.
-    - Otherwise, `prompt` is used for "word salad" style control, and `prompt_2` is for more human-readable descriptions.
-- **Examples**:
-    - `prompt = "photorealistic, high definition, masterpiece, sharp lines"`
-    - `prompt_2 = "A portrait of a handsome cat wearing a little hat. The cat is in front of a colorful background."`
-
-### `negative_prompt` (Optional)
-- **Type**: `string`
-- **Description**: Steer away from certain themes.
-
-### `sampler` (Optional)
-- **Type**: `string`
-- **Description**: Specifies which scheduler to use for image generation.
-- **Default**: `DDIM`
-- **Available Values**:
-    - `PNDM`: `PNDMScheduler`
-    - `KLMS`: `LMSDiscreteScheduler`
-    - `DDIM`: `DDIMScheduler`
-    - `DDPM`: `DDPMScheduler`
-    - `K_EULER`: `EulerDiscreteScheduler`
-    - `K_EULER_ANCESTRAL`: `EulerAncestralDiscreteScheduler`
-    - `DPMSolverMultistep`: ["DPMSolverMultistepScheduler", {"use_karras_sigmas": False}]
-    - `K_DPMPP_2M`: `["DPMSolverMultistepScheduler", {"use_karras_sigmas": True}]
-    - `DPM++2MKarras`: `DPMSolverMultistepScheduler`
-    - `KLMS`: `LMSDiscreteScheduler`
-    - `DPMSingle`: `DPMSolverSinglestepScheduler`
-    - `HEUN`: `HeunDiscreteScheduler`
-    - `DPM_2`: `KDPM2DiscreteScheduler`
-    - `DPM2_ANCESTRAL`: `KDPM2AncestralDiscreteScheduler`
-    - `DPM++ SDE Karras`: [DPMSolverSDEScheduler, {"use_karras_sigmas": True}]
-
-### `height` (Optional)
-- **Type**: `int`
-- **Description**: Specifies the height of the output image.
-- **Default**: `1024`
-
-### `width` (Optional)
-- **Type**: `int`
-- **Description**: Specifies the width of the output image.
-- **Default**: `1024`
-
-### Supported Resolutions
-
-| Resolution | Aspect Ratio |
-|------------|--------------|
-| 1024x1024  | 1:1          |
-| 1152x896   | 4:3          |
-| 896x1152   | 3:4          |
-| 1216x832   | 4:3          |
-| 896x1152   | 3:4          |
-| 832x1216   | 3:4          |
-| 1344x768   | 16:9         |
-| 768x1344   | 9:16         |
-| 1536x640   | 12:5         |
-| 640x1536   | 5:12         |
-
-
-### `cfg_scale` (Optional)
-- **Type**: `float`/`int`
-- **Description**: How strictly the process adheres to the prompt.
-- **Default**: `12`
-
-### `steps` (Optional)
-- **Type**: `int`
-- **Description**: Number of diffusion steps.
-- **Default**: `30`
-
-### `num_images`
-- **Type**: `int`
-- **Description**: Number of images to generate.
-
-### `seed` (Optional)
-- **Type**: `int`
-- **Description**: Fixes random noise for replicable results.
-- **Default**: Random
-
-### `style_preset` (Optional)
-- **Type**: `string`
-- **Description**: Guides the output image style.
-- **Available Values**: `3d-model`, `analog-film`, `anime`, ... (include all other styles here)
-
-### `use_refiner`
-- **Type**: `bool`
-- **Description**: Use the refiner or not.
-
-### `high_noise_frac` (Optional)
-- **Type**: `float`/`int`
-- **Description**: Determines noise amount using the base model vs. refiner.
-- **Default**: `0.8`
-
-### `model`
-- **Type**: `string`
-- **Description**: Checkpoints supported.
-
-- **Available Values**: `copax-timeless`, `crystal-clear`, `duchaiten-aiart`, `realcartoon`, `samaritan`
-
-### `loras`
-- **Type**: `string`
-- **Description**: LoRAs supported in name-weight pairs.
-- **Available Values**: `add-detail`, `crayon-style`, (more coming soon...)
-
-### `init_image` (Optional)
-- **Type**: `string`
-- **Description**: Use an image as a starting point. Encoded in base64.
-
-### `strength` (Optional)
-- **Type**: `float`/`int`
-- **Description**: Noise amount for img2img use cases.
-- **Default**: `0.8`
-
-## Notes
-- **Img2Img Cases**: `init_image` and `strength` are applicable only for Img2Img cases.
+* [SDXL 1.0](octoml_sd_api_docs/sdxl-1_0.md)
+* [ControlNet - Canny](octoml_sd_api_docs/controlnet_canny.md)
