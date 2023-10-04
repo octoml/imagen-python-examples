@@ -1,6 +1,6 @@
-# OctoAI Imagen & SDXL Evaluation | Typeface
+# OctoAI Imagen & SDXL Examples
 
-This repo contains the minimum set of instructions for Typeface to get started using OctoAI's Image Generation and SDXL capabilities. As we continue to roll out new features and functionality, we will update this documentation to support your onboarding on to the OctoAI platform.
+This repo contains a minimum set of instructions to get started using OctoAI's Image Generation and SDXL capabilities. As we continue to roll out new features and functionality, we will update this documentation to support your onboarding on to the OctoAI platform.
 
 We strongly recommend you read our [docs](https://docs.octoai.cloud/docs), which include robust examples and tutorials.
 
@@ -119,9 +119,9 @@ To make exploring the OctoAI service easier, run the code below to build and lau
 Clone this repo:
 ```bash
 # Installs this repo
-git clone https://github.com/octoml/typeface-external.git
+git clone https://github.com/octoml/imagen-python-examples.git
 
-cd typeface-external
+cd imagen-python-examples
 
 # RECOMMENDED" Create a new conda enviroment - 
 # conda create --name octoai
@@ -136,33 +136,3 @@ streamlit run app/1_OctoAI_Eval.py
 ```
 
 This will launch a Streamlit app that will allow you to explore all the functionality of the OctoAI service, including customization features, such as loras, negative prompts, checkpoints, and more.
-
-## ControlNet SDXL
-
-- This endpoint currently supports [ControlNet Canny](https://huggingface.co/diffusers/controlnet-canny-sdxl-1.0), we will be adding depth and softedge to this image shortly.
-- There is an optional NSFW filter implemented using a [safety checker](https://huggingface.co/CompVis/stable-diffusion-safety-checker) and [feature extractor](https://huggingface.co/openai/clip-vit-base-patch32). This is currently turned off for you, as we previously agreed that you will be doing NSFW filtering on your end.
-- There are currently two versions of this endpoint — a cost-optimized one and a latency-optimized one.
-- An auth token is required to access these endpoints
-- We currently have 1 hardware replica up and running for each endpoint, your functional testing. Expect the image URL to change later.
-
-### Model Endpoints 
-```bash
-# Cost Optimized Endpoint
-https://control-sdxl2-vvwbynjr46vc.octoai.run/canny
-
-# Latency Optimized Endpoint
-https://controlnet-sdxl-a100-vvwbynjr46vc.octoai.run/canny
-
-# Run an example using the utility script in example_python
-python example_python/octoai_canny_request.py
-```
-
-| Endpoint           | Scenario                              | avg     | med     | max     | p(90)   | p(95)   |
-|--------------------|---------------------------------------|---------|---------|---------|---------|---------|
-| Cost-Optimized     | Current Latency at 1 virtual user, 30 steps | 11.89s  | 14.23s  | 14.43s  | 14.34s  | 14.39s  |
-| Latency-Optimized  | Current Latency at 1 virtual user, 30 steps | 5.49s   | 5.99s   | 6.4s    | 6.02s   | 6.21s   |
-
-## OctoAI Image Generation API Reference
-
-* [SDXL 1.0](octoml_sd_api_docs/sdxl-1_0.md)
-* [ControlNet - Canny](octoml_sd_api_docs/controlnet_canny.md)
