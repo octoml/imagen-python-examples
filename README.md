@@ -25,7 +25,7 @@ For more advanced examples, clone this repo and install the requirements.txt fil
 Set up OctoAI environment variables:
 
 ```bash
-export OCTOAI_ACCESS_TOKEN=<sent separately>
+export OCTOAI_ACCESS_TOKEN=<your_token_here>
 export OCTOAI_ENDPOINT_URL=https://image.octoai.run
 ```
 
